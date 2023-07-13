@@ -1,0 +1,57 @@
+<script>
+    'use strict';
+    var worker = new Worker('wavpack-worker.js');
+    var wvData;
+    window.addEventListener('message', function(event) {
+    	'use strict';
+    	console.log('Got it!');
+    	//parent.postMessage('some message', '*');
+    	if (event.data.wvData) {
+    		wvData = event.data.wvData;
+    	}
+    	if (event.data === 'onended') {
+            worker.postMessage('onended');
+            return;
+        }
+        worker.onmessage = function(event) {
+        	'use strict';
+        	if (event.data === null) {
+                parent.postMessage(null, '*');
+                return;
+            }
+            if (typeof event.data.BYTES_PER_ELEMENT !== 'undefined') {
+                if (event.data.BYTES_PER_ELEMENT > 0) {
+                    worker.postMessage(wvData, [wvData]);
+                    //console.log('Ready');
+                } else {
+                    setTimeout(function() {
+                        'use strict';
+                        worker.postMessage('BYTES_PER_ELEMENT');
+                    }, 1);
+                }
+                return;
+            }
+            if (typeof event.data.sampleRate !== 'undefined') {
+                parent.postMessage({sampleRate: event.data.sampleRate}, "*");
+                return;
+            }
+            if (typeof event.data.numSamples !== 'undefined') {
+                parent.postMessage({numSamples: event.data.numSamples}, "*");
+                return;
+            }
+            if (typeof event.data.wvData !== 'undefined') {
+                event.data.wvData = undefined;
+                return;
+            }
+            parent.postMessage({
+            	L: event.data.L,
+            	R: event.data.R
+            }, '*', [event.data.L.buffer, event.data.R.buffer]);
+        };
+
+        setTimeout(function() {
+            'use strict';
+            worker.postMessage('BYTES_PER_ELEMENT');
+        }, 0);
+    });
+</script>
