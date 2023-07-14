@@ -1,17 +1,19 @@
 "use strict";
 //var Module = {'wasmMemory': new WebAssembly.Memory({initial: 16 * 1024 / 64, maximum: 16 * 1024 / 64})};
 importScripts("wavpack.js");
-const min_sample_duration = 1.5; // sec
-const fetching_interval = 10; // ms (Immediately if available, default: 5)
+const min_sample_duration = 2; // sec
+const fetching_interval = 8; // ms (Immediately if available, default: 5)
+const max_buffered_duration = 10;
+const next_fetching = 50; // ms
 var sample_rate = 44100;
 var numChannels = 1;
 var bps = 2;
 var decodedamount = 1;
 var arrayPointer;
-var min_sample_size = 100;
 var floatDivisor = 1.0;
 var fetched_data_left = new Float32Array(0);
 var fetched_data_right = new Float32Array(0);
+var min_sample_size = 100;
 var end_of_song_reached = false;
 var stopped = false;
 var is_reading = false;
@@ -78,7 +80,12 @@ function periodicFetch () {
     if (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
         //console.log("~");
-        setTimeout(periodicFetch, fetching_interval + 8);
+        setTimeout(periodicFetch, 1);
+        return;
+    }
+
+    if (fetched_data_left.length >= max_buffered_duration * sample_rate) {
+        setTimeout(periodicFetch, next_fetching);
         return;
     }
 
@@ -182,7 +189,7 @@ const addBufferToAudioContext = () => {
     while (pcm_buffer_in_use) {
         // wait, this shouldn't be called, but if we're adding more data to the PCM buffer, don't want to overwrite it
         //console.log("-");
-        setTimeout(addBufferToAudioContext, fetching_interval);
+        setTimeout(addBufferToAudioContext, 1);
         return;
     }
 
