@@ -78,7 +78,7 @@ function periodicFetch () {
     if (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
         //console.log("~");
-        setTimeout(periodicFetch, fetching_interval * 2);
+        setTimeout(periodicFetch, fetching_interval + 10);
         return;
     }
 
