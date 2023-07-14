@@ -2,7 +2,7 @@
 //var Module = {'wasmMemory': new WebAssembly.Memory({initial: 16 * 1024 / 64, maximum: 16 * 1024 / 64})};
 importScripts("wavpack.js");
 const min_sample_duration = 2; // sec
-const fetching_interval = 8; // ms (Immediately if available, default: 5)
+const fetching_interval = 7; // ms (Immediately if available, default: 5)
 const max_buffered_duration = 10;
 const next_fetching = 50; // ms
 var sample_rate = 44100;
