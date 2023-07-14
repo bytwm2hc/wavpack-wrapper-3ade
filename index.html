@@ -4,8 +4,6 @@
     var wvData;
     window.addEventListener('message', function(event) {
     	'use strict';
-    	console.log('Got it!');
-    	//parent.postMessage('some message', '*');
     	if (event.data.wvData) {
     		wvData = event.data.wvData;
     	}
@@ -22,7 +20,6 @@
             if (typeof event.data.BYTES_PER_ELEMENT !== 'undefined') {
                 if (event.data.BYTES_PER_ELEMENT > 0) {
                     worker.postMessage(wvData, [wvData]);
-                    //console.log('Ready');
                 } else {
                     setTimeout(function() {
                         'use strict';
