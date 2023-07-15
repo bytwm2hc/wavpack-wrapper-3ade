@@ -40,7 +40,7 @@ function play (wvData) {
     wvData = undefined;
     data = undefined;
 
-    if (typeof arrayPointer === "undefined") {
+    if (typeof arrayPointer === 'undefined') {
         //let result = Module.onRuntimeInitialized = () => {
             arrayPointer = Module._malloc(4096 * bytes_per_element);
         //};
@@ -50,24 +50,24 @@ function play (wvData) {
     Module.HEAP32.set(musicdata, arrayPointer / bytes_per_element);
 
     // lets initialise the WavPack file so we know its sample rate, number of channels, bytes per sample etc.
-    Module.ccall("initialiseWavPack", null, ["string"], [filename]);
+    Module.ccall('initialiseWavPack', null, ['string'], [filename]);
 
-    sample_rate = Module.ccall("GetSampleRate", null, [], []);
+    sample_rate = Module.ccall('GetSampleRate', null, [], []);
     //console.log("Sample rate is ", sample_rate);
     postMessage({
         sampleRate: sample_rate
     });
 
     postMessage({
-        numSamples: Module.ccall("GetNumSamples", null, [], [])
+        numSamples: Module.ccall('GetNumSamples', null, [], [])
     });
 
-    numChannels = Module.ccall("GetNumChannels", null, [], []);
+    numChannels = Module.ccall('GetNumChannels', null, [], []);
     //console.log("(Reduced) number of channels is ", numChannels);
 
     min_sample_size = min_sample_duration * sample_rate;
 
-    bps = Module.ccall("GetBytesPerSample", null, [], []);
+    bps = Module.ccall('GetBytesPerSample', null, [], []);
     //console.log("Bytes per sample is ", bps);
 
     floatDivisor = Math.pow(2, bps * 8 - 1);
@@ -84,12 +84,12 @@ function periodicFetch () {
         return;
     }
 
-    if (fetched_data_left.length > min_sample_duration * sample_rate * 4) {
+    if (fetched_data_left.length > min_sample_duration * sample_rate * 5) {
         setTimeout(periodicFetch, next_fetching);
         return;
     }
 
-    decodedamount = Module.ccall("DecodeWavPackBlock", "number", ["number", "number", "number"], [2, 2, arrayPointer]);
+    decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
     pcm_buffer_in_use = true;
 
@@ -180,11 +180,6 @@ const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
-        if (end_of_song_reached) {
-            setTimeout(function () {
-                postMessage(null);
-            }, 4);
-        }
         return;
     }
 
