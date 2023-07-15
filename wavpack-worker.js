@@ -252,9 +252,9 @@ function concatFloat32Arrays (arr1, arr2) {
 function detectMaxBufferedLength (sampleRate) {
     'use strict';
     if (sampleRate > 48000) {
-        return 1048576;
+        return 1536000;
     }
-    return 266240;
+    return 384000;
 }
 
 const makeId = (length) => {
