@@ -84,7 +84,7 @@ function periodicFetch () {
         return;
     }
 
-    if (fetched_data_left.length >= min_sample_duration * max_buffered_length_factor * sample_rate) {
+    if (fetched_data_left.length > min_sample_duration * sample_rate * 2) {
         setTimeout(periodicFetch, next_fetching);
         return;
     }
@@ -139,7 +139,12 @@ function periodicFetch () {
 
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
-        setTimeout(periodicFetch, fetching_interval);
+        if (fetched_data_left.length > min_sample_duration * sample_rate) {
+            setTimeout(periodicFetch, fetching_interval * 2);
+        }
+        else {
+            setTimeout(periodicFetch, fetching_interval);
+        }
         //return;
     }
 
