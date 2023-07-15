@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 //var Module = {'wasmMemory': new WebAssembly.Memory({initial: 16 * 1024 / 64, maximum: 16 * 1024 / 64})};
 importScripts("wavpack.js");
 const min_sample_duration = 2; // sec
 const fetching_interval = 5; // ms (Immediately if available, default: 5)
-const max_buffered_length = 1048576;
 const next_fetching = 500; // ms
 var sample_rate = 44100;
 var numChannels = 1;
 var bps = 2;
 var decodedamount = 1;
 var arrayPointer;
+var max_buffered_length;
 var floatDivisor = 1.0;
 var fetched_data_left = new Float32Array(0);
 var fetched_data_right = new Float32Array(0);
@@ -20,7 +20,7 @@ var is_reading = false;
 var pcm_buffer_in_use = false;
 
 function play (wvData) {
-    "use strict";
+    'use strict';
     end_of_song_reached = false;
     stopped = false;
     is_reading = false;
@@ -61,6 +61,7 @@ function play (wvData) {
     postMessage({
         numSamples: Module.ccall("GetNumSamples", null, [], [])
     });
+    max_buffered_length = detectMaxBufferedLength(Module.ccall("GetNumSamples", null, [], []));
 
     numChannels = Module.ccall("GetNumChannels", null, [], []);
     //console.log("(Reduced) number of channels is ", numChannels);
@@ -76,7 +77,7 @@ function play (wvData) {
 }
 
 function periodicFetch () {
-    "use strict";
+    'use strict';
     if (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
         //console.log("~");
@@ -172,7 +173,7 @@ function periodicFetch () {
 }
 
 const readingLoop = () => {
-    "use strict";
+    'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
         return;
@@ -182,7 +183,7 @@ const readingLoop = () => {
 };
 
 const addBufferToAudioContext = () => {
-    "use strict";
+    'use strict';
     // let the world know we are actively reading
     is_reading = true;
 
@@ -233,7 +234,7 @@ const addBufferToAudioContext = () => {
 };
 
 function concatFloat32Arrays (arr1, arr2) {
-    "use strict";
+    'use strict';
     if (!arr1 || !arr1.length) {
         return arr2 && arr2.slice();
     }
@@ -246,6 +247,14 @@ function concatFloat32Arrays (arr1, arr2) {
     //arr1 = new Float32Array(0);
     //arr2 = new Float32Array(0);
     return out;
+}
+
+function detectMaxBufferedLength (sampleRate) {
+    'use strict';
+    if (sampleRate > 48000) {
+        return 1048576;
+    }
+    return 266240;
 }
 
 const makeId = (length) => {
@@ -261,7 +270,7 @@ const makeId = (length) => {
 }
 
 self.onmessage = function (event) {
-    "use strict";
+    'use strict';
     if (event.data === "onended") {
         readingLoop();
         return;
