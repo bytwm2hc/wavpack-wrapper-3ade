@@ -3,13 +3,13 @@
 importScripts("wavpack.js");
 const min_sample_duration = 2; // sec
 const fetching_interval = 5; // ms (Immediately if available, default: 5)
-const next_fetching = 500; // ms
+const max_buffered_length_factor = 5;
+const next_fetching = 800; // ms
 var sample_rate = 44100;
 var numChannels = 1;
 var bps = 2;
 var decodedamount = 1;
 var arrayPointer;
-var max_buffered_length;
 var floatDivisor = 1.0;
 var fetched_data_left = new Float32Array(0);
 var fetched_data_right = new Float32Array(0);
@@ -53,7 +53,6 @@ function play (wvData) {
     Module.ccall("initialiseWavPack", null, ["string"], [filename]);
 
     sample_rate = Module.ccall("GetSampleRate", null, [], []);
-    max_buffered_length = detectMaxBufferedLength(sample_rate);
     //console.log("Sample rate is ", sample_rate);
     postMessage({
         sampleRate: sample_rate
@@ -85,7 +84,7 @@ function periodicFetch () {
         return;
     }
 
-    if (fetched_data_left.length >= max_buffered_length) {
+    if (fetched_data_left.length >= min_sample_duration * max_buffered_length_factor * sample_rate) {
         setTimeout(periodicFetch, next_fetching);
         return;
     }
@@ -254,20 +253,6 @@ function concatFloat32Arrays (arr1, arr2) {
     //arr1 = new Float32Array(0);
     //arr2 = new Float32Array(0);
     return out;
-}
-
-function detectMaxBufferedLength (sampleRate) {
-    'use strict';
-    switch (sampleRate) {
-        case 44100:
-            return 45158400;
-        case 48000:
-            return 1536000;
-        case 96000:
-            return 1536000;
-        default:
-            return 45158400;
-    }
 }
 
 const makeId = (length) => {
