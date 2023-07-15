@@ -229,7 +229,9 @@ const addBufferToAudioContext = () => {
     pcm_buffer_in_use = false;
     //setTimeout(readingLoop, 0);
     if (end_of_song_reached) {
-        postMessage(null);
+        setTimeout(function () {
+            postMessage(null);
+        }, 4);
     }
 };
 
