@@ -262,11 +262,11 @@ function detectMaxBufferedLength (sampleRate) {
         case 44100:
             return 45158400;
         case 48000:
-            retrun 1536000;
+            return 1536000;
         case 96000:
-            retrun 1536000;
+            return 1536000;
         default:
-            retrun 45158400;
+            return 45158400;
     }
 }
 
