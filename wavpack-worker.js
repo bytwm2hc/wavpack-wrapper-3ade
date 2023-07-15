@@ -154,6 +154,12 @@ function periodicFetch () {
         return;
     }
 
+    if (end_of_song_reached) {
+        setTimeout(function () {
+            postMessage(null);
+        }, 1);
+    }
+
     // Start playing when decoded all but wait very long time...
     //if (end_of_song_reached) {
     //    console.log(buffer.duration);
@@ -235,7 +241,7 @@ const addBufferToAudioContext = () => {
     if (end_of_song_reached) {
         setTimeout(function () {
             postMessage(null);
-        }, 4);
+        }, 1);
     }
 };
 
