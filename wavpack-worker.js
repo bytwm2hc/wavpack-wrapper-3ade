@@ -176,6 +176,11 @@ const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
+        if (end_of_song_reached) {
+            setTimeout(function () {
+                postMessage(null);
+            }, 4);
+        }
         return;
     }
 
@@ -253,10 +258,16 @@ function concatFloat32Arrays (arr1, arr2) {
 
 function detectMaxBufferedLength (sampleRate) {
     'use strict';
-    if (sampleRate > 48000) {
-        return 1536000;
+    switch (sampleRate) {
+        case 44100:
+            return 45158400;
+        case 48000:
+            retrun 1536000;
+        case 96000:
+            retrun 1536000;
+        default:
+            retrun 45158400;
     }
-    return 384000;
 }
 
 const makeId = (length) => {
