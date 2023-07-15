@@ -53,6 +53,7 @@ function play (wvData) {
     Module.ccall("initialiseWavPack", null, ["string"], [filename]);
 
     sample_rate = Module.ccall("GetSampleRate", null, [], []);
+    max_buffered_length = detectMaxBufferedLength(sample_rate);
     //console.log("Sample rate is ", sample_rate);
     postMessage({
         sampleRate: sample_rate
@@ -61,7 +62,6 @@ function play (wvData) {
     postMessage({
         numSamples: Module.ccall("GetNumSamples", null, [], [])
     });
-    max_buffered_length = detectMaxBufferedLength(Module.ccall("GetNumSamples", null, [], []));
 
     numChannels = Module.ccall("GetNumChannels", null, [], []);
     //console.log("(Reduced) number of channels is ", numChannels);
