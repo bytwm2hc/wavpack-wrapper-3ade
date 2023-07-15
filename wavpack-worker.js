@@ -3,7 +3,7 @@
 importScripts("wavpack.js");
 const min_sample_duration = 2; // sec
 const fetching_interval = 5; // ms (Immediately if available, default: 5)
-const max_buffered_duration = 10;
+const max_buffered_length = 1048576;
 const next_fetching = 500; // ms
 var sample_rate = 44100;
 var numChannels = 1;
@@ -84,7 +84,7 @@ function periodicFetch () {
         return;
     }
 
-    if (fetched_data_left.length >= max_buffered_duration * sample_rate) {
+    if (fetched_data_left.length >= max_buffered_length) {
         setTimeout(periodicFetch, next_fetching);
         return;
     }
