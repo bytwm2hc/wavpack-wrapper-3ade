@@ -84,7 +84,7 @@ function periodicFetch () {
         return;
     }
 
-    if (fetched_data_left.length > min_sample_duration * sample_rate * 2) {
+    if (fetched_data_left.length > min_sample_duration * sample_rate * 4) {
         setTimeout(periodicFetch, next_fetching);
         return;
     }
