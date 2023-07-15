@@ -84,10 +84,10 @@ function periodicFetch () {
         return;
     }
 
-    if (fetched_data_left.length > min_sample_duration * sample_rate * 5) {
-        setTimeout(periodicFetch, next_fetching);
-        return;
-    }
+    //if (fetched_data_left.length > min_sample_duration * sample_rate * 5) {
+    //    setTimeout(periodicFetch, next_fetching);
+    //    return;
+    //}
 
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
@@ -140,7 +140,7 @@ function periodicFetch () {
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
         if (fetched_data_left.length > min_sample_duration * sample_rate) {
-            setTimeout(periodicFetch, fetching_interval * 2);
+            setTimeout(periodicFetch, fetching_interval * fetching_interval);
         }
         else {
             setTimeout(periodicFetch, fetching_interval);
@@ -152,12 +152,6 @@ function periodicFetch () {
     if (!is_reading && fetched_data_left.length >= min_sample_size) {
         readingLoop(); // start reading
         return;
-    }
-
-    if (end_of_song_reached) {
-        setTimeout(function () {
-            postMessage(null);
-        }, 1);
     }
 
     // Start playing when decoded all but wait very long time...
