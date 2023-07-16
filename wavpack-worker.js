@@ -85,10 +85,10 @@ function periodicFetch () {
         //return;
     }
 
-    //if (fetched_data_left.length > min_sample_duration * sample_rate * 5) {
-    //    setTimeout(periodicFetch, next_fetching);
-    //    return;
-    //}
+    if (fetched_data_left.length > min_sample_duration * sample_rate * 5 && !end_of_song_reached) {
+        setTimeout(periodicFetch, next_fetching);
+        return;
+    }
 
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
