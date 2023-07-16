@@ -198,13 +198,14 @@ function periodicFetch () {
 
 const readingLoop = () => {
     'use strict';
-    if (stopped || fetched_data_left.length < min_sample_size) {
-        is_reading = false;
+    if (end_of_song_reached) {
+        postMessage(null);
         return;
     }
 
-    if (end_of_song_reached) {
-        postMessage(null);
+    if (stopped || fetched_data_left.length < min_sample_size) {
+        is_reading = false;
+        return;
     }
 
     addBufferToAudioContext();
