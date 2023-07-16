@@ -85,10 +85,7 @@ function periodicFetch () {
         //return;
     }
 
-    if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && !end_of_song_reached) {
-        setTimeout(periodicFetch, next_fetching);
-        return;
-    }
+    if (fetched_data_left.length > min_sample_duration * sample_rate * 2) {
 
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
@@ -137,6 +134,7 @@ function periodicFetch () {
     }
 
     pcm_buffer_in_use = false;
+    }
 
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
