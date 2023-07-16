@@ -1,8 +1,8 @@
 'use strict';
 //var Module = {'wasmMemory': new WebAssembly.Memory({initial: 16 * 1024 / 64, maximum: 16 * 1024 / 64})};
 importScripts('wavpack.js');
-const min_sample_duration = 5; // sec
-const fetching_interval = 1; // ms (Immediately if available, default: 5)
+const min_sample_duration = 2; // sec
+const fetching_interval = 5; // ms (Immediately if available, default: 5)
 const max_buffered_length_factor = 5;
 const next_fetching = 800; // ms
 var sample_rate = 44100;
@@ -85,8 +85,6 @@ function periodicFetch () {
         //return;
     }
 
-    if (fetched_data_left.length <= min_sample_duration * sample_rate * 2) {
-
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
     pcm_buffer_in_use = true;
@@ -134,15 +132,14 @@ function periodicFetch () {
     }
 
     pcm_buffer_in_use = false;
-    }
 
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
-        if (fetched_data_left.length > min_sample_duration * sample_rate && sample_rate < 96000) {
-            setTimeout(periodicFetch, fetching_interval * 2);
+        if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 4);
         }
-        else if (fetched_data_left.length > min_sample_duration * min_sample_duration * sample_rate) {
-            setTimeout(periodicFetch, fetching_interval * fetching_interval);
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 8);
         }
         else {
             setTimeout(periodicFetch, fetching_interval);
