@@ -251,7 +251,9 @@ function concatFloat32Arrays (arr1, arr2) {
     }
     let out = new Float32Array(arr1.length + arr2.length);
     out.set(arr1);
-    out.set(arr2, arr2.length);
+    out.set(arr2, arr1.length);
+    arr1 = new Float32Array(0);
+    arr2 = new Float32Array(0);
     return out;
 }
 
