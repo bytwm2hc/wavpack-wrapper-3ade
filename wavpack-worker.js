@@ -140,7 +140,7 @@ function periodicFetch () {
 
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
-        if (fetched_data_left.length > min_sample_duration * sample_rate) {
+        if (fetched_data_left.length > min_sample_duration * sample_rate && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 2);
         }
         else if (fetched_data_left.length > min_sample_duration * min_sample_duration * sample_rate) {
