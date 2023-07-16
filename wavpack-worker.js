@@ -85,7 +85,7 @@ function periodicFetch () {
         //return;
     }
 
-    if (fetched_data_left.length > min_sample_duration * sample_rate * 2) {
+    if (fetched_data_left.length <= min_sample_duration * sample_rate * 2) {
 
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
