@@ -85,7 +85,7 @@ function periodicFetch () {
         //return;
     }
 
-    if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && !end_of_song_reached) {
+    if (fetched_data_left.length > min_sample_duration * sample_rate * 3 && !end_of_song_reached) {
         setTimeout(periodicFetch, next_fetching);
         return;
     }
@@ -251,9 +251,9 @@ function concatFloat32Arrays (arr1, arr2) {
     }
     let out = new Float32Array(arr1.length + arr2.length);
     out.set(arr1);
-    out.set(arr2, arr1.length);
-    //arr1 = new Float32Array(0);
-    //arr2 = new Float32Array(0);
+    arr1 = new Float32Array(0);
+    out.set(arr2, arr2.length);
+    arr2 = new Float32Array(0);
     return out;
 }
 
