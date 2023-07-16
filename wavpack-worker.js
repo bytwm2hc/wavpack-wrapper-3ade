@@ -147,6 +147,18 @@ function periodicFetch () {
         else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 8);
         }
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 10);
+        }
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 12);
+        }
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 14);
+        }
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 16);
+        }
         else {
             setTimeout(periodicFetch, fetching_interval);
         }
