@@ -136,28 +136,31 @@ function periodicFetch () {
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
         if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && sample_rate < 96000) {
-            setTimeout(periodicFetch, fetching_interval * 2);
-        }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 4);
         }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && sample_rate < 96000) {
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 6);
         }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && sample_rate < 96000) {
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 8);
         }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && sample_rate < 96000) {
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 10);
         }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && sample_rate < 96000) {
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 12);
         }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && sample_rate < 96000) {
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 14);
         }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && sample_rate < 96000) {
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && sample_rate < 96000) {
             setTimeout(periodicFetch, fetching_interval * 16);
+        }
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 18);
+        }
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && sample_rate < 96000) {
+            setTimeout(periodicFetch, fetching_interval * 20);
         }
         else {
             setTimeout(periodicFetch, fetching_interval);
