@@ -3664,7 +3664,7 @@ function dbg(text) {
       // full 4GB Wasm memories, the size will wrap back to 0 bytes in Wasm side
       // for any code that deals with heap sizes, which would require special
       // casing all heap size related code to treat 0 specially.
-      268435456;
+      134217728;
   
   var growMemory = (size) => {
       var b = wasmMemory.buffer;
