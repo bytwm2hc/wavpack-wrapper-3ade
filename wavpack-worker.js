@@ -1,8 +1,8 @@
 'use strict';
 //var Module = {'wasmMemory': new WebAssembly.Memory({initial: 16 * 1024 / 64, maximum: 16 * 1024 / 64})};
 importScripts('wavpack.js');
-const min_sample_duration = 4; // sec
-const fetching_interval = 5; // ms (Immediately if available, default: 5)
+const min_sample_duration = 3; // sec
+const fetching_interval = 4; // ms (Immediately if available, default: 5)
 const max_buffered_length_factor = 5;
 const next_fetching = 800; // ms
 var sample_rate = 44100;
@@ -237,9 +237,7 @@ const addBufferToAudioContext = () => {
     pcm_buffer_in_use = false;
     //setTimeout(readingLoop, 0);
     if (end_of_song_reached) {
-        setTimeout(function () {
-            postMessage(null);
-        }, fetching_interval);
+        postMessage(null);
     }
 };
 
