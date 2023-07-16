@@ -236,7 +236,7 @@ const addBufferToAudioContext = () => {
     if (end_of_song_reached) {
         setTimeout(function () {
             postMessage(null);
-        }, 1);
+        }, fetching_interval);
     }
 };
 
