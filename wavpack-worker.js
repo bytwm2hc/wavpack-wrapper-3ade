@@ -1,6 +1,6 @@
 'use strict';
 //var Module = {'wasmMemory': new WebAssembly.Memory({initial: 16 * 1024 / 64, maximum: 16 * 1024 / 64})};
-importScripts("wavpack.js");
+importScripts('wavpack.js');
 const min_sample_duration = 2; // sec
 const fetching_interval = 5; // ms (Immediately if available, default: 5)
 const max_buffered_length_factor = 5;
@@ -30,8 +30,8 @@ function play (wvData) {
     let data, filename, stream;
     data = new Uint8Array(wvData);
     //filename = makeId(5);
-    filename = "wavpack.wv";
-    stream = FS.open(filename, "w+");
+    filename = 'wavpack.wv';
+    stream = FS.open(filename, 'w+');
     FS.write(stream, data, 0, data.length, 0);
     FS.close(stream);
     postMessage({
@@ -53,7 +53,7 @@ function play (wvData) {
     Module.ccall('initialiseWavPack', null, ['string'], [filename]);
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
-    //console.log("Sample rate is ", sample_rate);
+    //console.log('Sample rate is ', sample_rate);
     postMessage({
         sampleRate: sample_rate
     });
@@ -63,12 +63,12 @@ function play (wvData) {
     });
 
     numChannels = Module.ccall('GetNumChannels', null, [], []);
-    //console.log("(Reduced) number of channels is ", numChannels);
+    //console.log('(Reduced) number of channels is ', numChannels);
 
     min_sample_size = min_sample_duration * sample_rate;
 
     bps = Module.ccall('GetBytesPerSample', null, [], []);
-    //console.log("Bytes per sample is ", bps);
+    //console.log('Bytes per sample is ', bps);
 
     floatDivisor = Math.pow(2, bps * 8 - 1);
 
@@ -77,11 +77,12 @@ function play (wvData) {
 
 function periodicFetch () {
     'use strict';
-    if (pcm_buffer_in_use) {
+    //if (pcm_buffer_in_use) {
+    while (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
-        //console.log("~");
-        setTimeout(periodicFetch, fetching_interval);
-        return;
+        console.log('~');
+        //setTimeout(periodicFetch, fetching_interval);
+        //return;
     }
 
     //if (fetched_data_left.length > min_sample_duration * sample_rate * 5) {
@@ -193,9 +194,9 @@ const addBufferToAudioContext = () => {
 
     while (pcm_buffer_in_use) {
         // wait, this shouldn't be called, but if we're adding more data to the PCM buffer, don't want to overwrite it
-        //console.log("-");
-        setTimeout(addBufferToAudioContext, 1);
-        return;
+        console.log('-');
+        //setTimeout(addBufferToAudioContext, 1);
+        //return;
     }
 
     pcm_buffer_in_use = true;
@@ -269,12 +270,12 @@ const makeId = (length) => {
 
 self.onmessage = function (event) {
     'use strict';
-    if (event.data === "onended") {
+    if (event.data === 'onended') {
         readingLoop();
         return;
     }
 
-    if (event.data === "BYTES_PER_ELEMENT") {
+    if (event.data === 'BYTES_PER_ELEMENT') {
         try {
             postMessage({BYTES_PER_ELEMENT: Module.HEAP32.BYTES_PER_ELEMENT});
         }
@@ -284,11 +285,11 @@ self.onmessage = function (event) {
         return;
     }
 
-    if (event.data === "free") {
+    if (event.data === 'free') {
         if (arrayPointer) {
             Module._free(arrayPointer);
         }
-        FS.unlink("wavpack.wv");
+        FS.unlink('wavpack.wv');
         return;
     }
 

@@ -29,11 +29,11 @@
                 return;
             }
             if (typeof event.data.sampleRate !== 'undefined') {
-                parent.postMessage({sampleRate: event.data.sampleRate}, "*");
+                parent.postMessage({sampleRate: event.data.sampleRate}, '*');
                 return;
             }
             if (typeof event.data.numSamples !== 'undefined') {
-                parent.postMessage({numSamples: event.data.numSamples}, "*");
+                parent.postMessage({numSamples: event.data.numSamples}, '*');
                 return;
             }
             if (typeof event.data.wvData !== 'undefined') {
