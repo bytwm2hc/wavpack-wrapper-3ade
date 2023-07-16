@@ -252,9 +252,11 @@ const addBufferToAudioContext = () => {
 
     pcm_buffer_in_use = false;
     //setTimeout(readingLoop, 0);
-    if (end_of_song_reached) {
-        postMessage(null);
-    }
+    setTimeout(function () {
+        if (end_of_song_reached) {
+            postMessage(null);
+        }
+    }, fetching_interval * 20);
 };
 
 function concatFloat32Arrays (arr1, arr2) {
