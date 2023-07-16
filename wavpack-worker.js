@@ -187,6 +187,10 @@ const readingLoop = () => {
         return;
     }
 
+    if (end_of_song_reached) {
+        postMessage(null);
+    }
+
     addBufferToAudioContext();
 };
 
