@@ -198,11 +198,6 @@ function periodicFetch () {
 
 const readingLoop = () => {
     'use strict';
-    if (end_of_song_reached) {
-        postMessage(null);
-        return;
-    }
-
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
         return;
