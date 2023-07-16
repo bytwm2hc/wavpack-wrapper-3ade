@@ -255,18 +255,20 @@ const addBufferToAudioContext = () => {
     setTimeout(function () {
         if (end_of_song_reached) {
             postMessage(null);
+        } else {
+            setTimeout(function () {
+                if (end_of_song_reached) {
+                    postMessage(null);
+                } else {
+                    setTimeout(function () {
+                        if (end_of_song_reached) {
+                            postMessage(null);
+                        }
+                    }, fetching_interval * 40);
+                }
+            }, fetching_interval * 30);
         }
     }, fetching_interval * 20);
-    setTimeout(function () {
-        if (end_of_song_reached) {
-            postMessage(null);
-        }
-    }, fetching_interval * 30);
-    setTimeout(function () {
-        if (end_of_song_reached) {
-            postMessage(null);
-        }
-    }, fetching_interval * 40);
 };
 
 function concatFloat32Arrays (arr1, arr2) {
