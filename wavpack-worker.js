@@ -147,7 +147,7 @@ function periodicFetch () {
         else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && sample_rate < 96000 && decodedamount != 0) {
             setTimeout(periodicFetch, fetching_interval * 6);
         }
-        else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
+        else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && sample_rate < 96000 && decodedamount != 0) {
             setTimeout(periodicFetch, fetching_interval * 8);
         }
         else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
