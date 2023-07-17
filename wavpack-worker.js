@@ -164,17 +164,17 @@ const periodicFetch = () => {
                 setTimeout(periodicFetch, fetching_interval * 6);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 8);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 10);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 12);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 14);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 16);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 18);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 20);
             } else {
                 setTimeout(periodicFetch, fetching_interval);
@@ -187,17 +187,17 @@ const periodicFetch = () => {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14 + 16);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && sample_rate < 96000 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
             } else {
                 setTimeout(periodicFetch, fetching_interval);
