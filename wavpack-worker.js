@@ -185,7 +185,7 @@ const periodicFetch = () => {
         } else {
             // high samplerate
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3);
+                setTimeout(periodicFetch, fetching_interval + 1);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 3 + 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
