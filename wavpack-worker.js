@@ -77,7 +77,7 @@ const play = (wvData) => {
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
     if (sample_rate > 64000) {
-        fetching_interval = 4;
+        fetching_interval = 1;
         min_sample_duration = 3;
     }
     postMessage({
@@ -208,6 +208,9 @@ const periodicFetch = () => {
             } else {
                 setTimeout(periodicFetch, fetching_interval);
             }
+            if (fetching_interval <= 4) {
+                fetching_interval += 1;
+            }
         }
     }
 
@@ -243,15 +246,12 @@ const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
-        console.log("b");
         if (end_of_song_reached) {
             postMessage(null);
-            console.log("b");
         }
         return;
     }
 
-    console.log("c");
     addBufferToAudioContext();
 };
 
