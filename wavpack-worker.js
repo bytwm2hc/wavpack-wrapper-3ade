@@ -78,7 +78,7 @@ const play = (wvData) => {
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
     if (sample_rate > 64000) {
         fetching_interval = 4;
-        min_sample_duration = 3;
+        min_sample_duration = 4;
     }
     postMessage({
         sampleRate: sample_rate
@@ -186,25 +186,25 @@ const periodicFetch = () => {
         } else {
             // high samplerate
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2);
+                setTimeout(periodicFetch, fetching_interval + 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14 + 16);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
+                setTimeout(periodicFetch, fetching_interval + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20 + 22);
             } else {
                 setTimeout(periodicFetch, fetching_interval);
             }
