@@ -4,7 +4,6 @@ let fetching_interval = 5; // ms (Immediately if available, default: 5)
 let min_sample_duration = 2; // sec
 let sample_rate = 44100;
 let numChannels = 1;
-let bps = 2;
 let decodedamount = 1;
 let arrayPointer;
 let floatDivisor = 1.0;
@@ -76,10 +75,11 @@ const play = (wvData) => {
     Module.ccall('initialiseWavPack', null, ['string'], [filename]);
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
-    if (sample_rate > 64000) {
-        fetching_interval = 1;
-        min_sample_duration = 3;
-    }
+    //if (sample_rate > 64000) {
+    //    fetching_interval = 1;
+    //    min_sample_duration = 3;
+    //}
+    min_sample_size = min_sample_duration * sample_rate;
     postMessage({
         sampleRate: sample_rate
     });
@@ -90,10 +90,7 @@ const play = (wvData) => {
 
     numChannels = Module.ccall('GetNumChannels', null, [], []);
 
-    min_sample_size = min_sample_duration * sample_rate;
-
-    bps = Module.ccall('GetBytesPerSample', null, [], []);
-
+    let bps = Module.ccall('GetBytesPerSample', null, [], []);
     floatDivisor = Math.pow(2, bps * 8 - 1);
 
     setTimeout(periodicFetch, 0);
@@ -101,12 +98,12 @@ const play = (wvData) => {
 
 const periodicFetch = () => {
     'use strict';
+    decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
+
     while (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
         console.log('~');
     }
-
-    decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
     pcm_buffer_in_use = true;
 
@@ -185,9 +182,9 @@ const periodicFetch = () => {
             }
         } else {
             // high samplerate
-            if (fetched_data_left.length > min_sample_duration * sample_rate) {
-                fetching_interval = 5;
-            }
+            //if (fetched_data_left.length > min_sample_duration * sample_rate) {
+            //    fetching_interval = 5;
+            //}
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 3);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
@@ -299,23 +296,9 @@ const addBufferToAudioContext = () => {
 
     pcm_buffer_in_use = false;
     //setTimeout(readingLoop, 0);
-    setTimeout(function() {
-        if (end_of_song_reached) {
-            postMessage(null);
-        } else {
-            setTimeout(function() {
-                if (end_of_song_reached) {
-                    postMessage(null);
-                } else {
-                    setTimeout(function() {
-                        if (end_of_song_reached) {
-                            postMessage(null);
-                        }
-                    }, fetching_interval * 40);
-                }
-            }, fetching_interval * 30);
-        }
-    }, fetching_interval * 20);
+    if (end_of_song_reached) {
+        postMessage(null);
+    }
 };
 
 self.onmessage = function(event) {
