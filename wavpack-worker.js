@@ -1,6 +1,6 @@
 'use strict';
 importScripts('wavpack.js');
-let fetching_interval = 8; // ms (Immediately if available, default: 5)
+let fetching_interval = 7; // ms (Immediately if available, default: 5)
 let min_sample_duration = 2; // sec
 let sample_rate = 44100;
 let numChannels = 1;
@@ -186,25 +186,25 @@ const periodicFetch = () => {
             //    fetching_interval = 5;
             //}
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3);
+                setTimeout(periodicFetch, fetching_interval + 2);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6 + 8);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6 + 8 + 10);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6 + 8 + 10 + 12);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6 + 8 + 10 + 12 + 14);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6 + 8 + 10 + 12 + 14 + 16);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 3 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
             } else {
                 setTimeout(periodicFetch, fetching_interval);
             }
@@ -242,7 +242,7 @@ const periodicFetch = () => {
 const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
-        is_reading = false;
+        //is_reading = false;
         if (end_of_song_reached) {
             postMessage(null);
         }
@@ -299,6 +299,7 @@ const addBufferToAudioContext = () => {
     if (end_of_song_reached) {
         postMessage(null);
     }
+    is_reading = false;
 };
 
 self.onmessage = function(event) {
