@@ -213,7 +213,7 @@ const periodicFetch = () => {
 
     // if we are not actively reading and have fetched enough
     if (!is_reading && fetched_data_left.length >= min_sample_size) {
-        readingLoop(); // start reading
+        readingLoop(); // start reading first time
         return;
     }
 
@@ -243,9 +243,6 @@ const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
-    }
-    if (end_of_song_reached) {
-        postMessage(null);
         return;
     }
 
