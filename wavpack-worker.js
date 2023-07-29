@@ -243,6 +243,7 @@ const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
+        setTimeout(readingLoop, fetching_interval);
         return;
     }
 
