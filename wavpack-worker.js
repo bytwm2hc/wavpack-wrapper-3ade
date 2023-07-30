@@ -243,7 +243,9 @@ const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
-        setTimeout(readingLoop, fetching_interval);
+        if (end_of_song_reached) {
+            postMessage(null);
+        }
         return;
     }
 
