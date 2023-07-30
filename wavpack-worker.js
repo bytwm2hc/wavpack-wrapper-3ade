@@ -185,7 +185,7 @@ const periodicFetch = () => {
             //if (fetched_data_left.length > min_sample_duration * sample_rate) {
             //    fetching_interval = 5;
             //}
-            if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
+            /* if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 2);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 2 + 4);
@@ -205,9 +205,9 @@ const periodicFetch = () => {
                 setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
-            } else {
+            } else { */
                 setTimeout(periodicFetch, fetching_interval);
-            }
+            //}
         }
     }
 
