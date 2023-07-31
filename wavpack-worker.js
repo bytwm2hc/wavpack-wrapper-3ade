@@ -1,7 +1,7 @@
 'use strict';
 importScripts('wavpack.js');
-let fetching_interval = 0; // ms (Immediately if available, default: 5)
-let min_sample_duration = 0.5; // sec
+let fetching_interval = 8; // ms (Immediately if available, default: 5)
+let min_sample_duration = 1; // sec
 let sample_rate = 44100;
 let numChannels = 1;
 let decodedamount = 1;
@@ -213,8 +213,8 @@ const periodicFetch = () => {
     }
 
     // if we are not actively reading and have fetched enough
-    if (!is_reading && fetched_data_left.length >= 30 * sample_rate) {
-        readingLoop(); // start reading (often only when first time)
+    if (!is_reading && fetched_data_left.length >= min_sample_size) {
+        readingLoop(); // start reading first time
         return;
     }
 
