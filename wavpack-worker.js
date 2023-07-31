@@ -43,6 +43,11 @@ const concatFloat32Arrays = (arr1, arr2) => {
     return result;
 } */
 
+const iOS = () => {
+    'use strict';
+    return ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+};
+
 const play = (wvData) => {
     'use strict';
     end_of_song_reached = false;
@@ -93,6 +98,9 @@ const play = (wvData) => {
     let bps = Module.ccall('GetBytesPerSample', null, [], []);
     floatDivisor = Math.pow(2, bps * 8 - 1);
 
+    if (!iOS) {
+        fetching_interval = 2;
+    }
     setTimeout(periodicFetch, 0);
 }
 
