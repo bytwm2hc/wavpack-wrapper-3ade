@@ -1,7 +1,7 @@
 'use strict';
 importScripts('wavpack.js');
-let fetching_interval = 6; // ms (Immediately if available, default: 5)
-let min_sample_duration = 3; // sec
+let fetching_interval = 2; // ms (Immediately if available, default: 5)
+let min_sample_duration = 6; // sec
 let sample_rate = 44100;
 let numChannels = 1;
 let decodedamount = 1;
@@ -93,10 +93,6 @@ const play = (wvData) => {
     let bps = Module.ccall('GetBytesPerSample', null, [], []);
     floatDivisor = Math.pow(2, bps * 8 - 1);
 
-    if (!iOS) {
-        fetching_interval = 2;
-        min_sample_duration = 6;
-    }
     min_sample_size = min_sample_duration * sample_rate;
     setTimeout(periodicFetch, 0);
 }
