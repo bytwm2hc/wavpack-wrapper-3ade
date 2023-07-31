@@ -1,6 +1,6 @@
 'use strict';
 importScripts('wavpack.js');
-let fetching_interval = 1; // ms (Immediately if available, default: 5)
+let fetching_interval = 6; // ms (Immediately if available, default: 5)
 let min_sample_duration = 1; // sec
 let sample_rate = 44100;
 let numChannels = 1;
@@ -43,10 +43,10 @@ const concatFloat32Arrays = (arr1, arr2) => {
     return result;
 } */
 
-const iOS = () => {
+/* const iOS = () => {
     'use strict';
     return ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-};
+}; */
 
 const play = (wvData) => {
     'use strict';
