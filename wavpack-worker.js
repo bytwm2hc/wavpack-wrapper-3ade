@@ -80,11 +80,6 @@ const play = (wvData) => {
     Module.ccall('initialiseWavPack', null, ['string'], [filename]);
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
-    //if (sample_rate > 64000) {
-    //    fetching_interval = 1;
-    //    min_sample_duration = 3;
-    //}
-    min_sample_size = min_sample_duration * sample_rate;
     postMessage({
         sampleRate: sample_rate
     });
@@ -100,7 +95,9 @@ const play = (wvData) => {
 
     if (!iOS) {
         fetching_interval = 2;
+        min_sample_duration = 6;
     }
+    min_sample_size = min_sample_duration * sample_rate;
     setTimeout(periodicFetch, 0);
 }
 
