@@ -10,6 +10,10 @@
         }
     	if (event.data.wvData) {
     		wvData = event.data.wvData;
+    		setTimeout(function() {
+    		    'use strict';
+    		    worker.postMessage('BYTES_PER_ELEMENT');
+    		}, 1);
     	}
         worker.onmessage = function(event) {
         	'use strict';
@@ -49,10 +53,5 @@
                 return;
             }
         };
-
-        setTimeout(function() {
-            'use strict';
-            worker.postMessage('BYTES_PER_ELEMENT');
-        }, 0);
     });
 </script>
