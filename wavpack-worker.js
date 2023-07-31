@@ -1,6 +1,6 @@
 'use strict';
 importScripts('wavpack.js');
-let fetching_interval = 8; // ms (Immediately if available, default: 5)
+let fetching_interval = 7; // ms (Immediately if available, default: 5)
 let min_sample_duration = 2; // sec
 let sample_rate = 44100;
 let numChannels = 1;
