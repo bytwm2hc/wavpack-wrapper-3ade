@@ -70,9 +70,9 @@
         wvData = undefined;
         data = undefined;
 
-        if (!iOS) {
-            fetching_interval = 1;
-        }
+        //if (!iOS) {
+        //    fetching_interval = 1;
+        //}
 
         if (typeof arrayPointer === 'undefined') {
             arrayPointer = Module._malloc(4096 * bytes_per_element);
@@ -283,7 +283,7 @@
         //}
         // the actual player
         //try {
-        console.log('a');
+        //console.log('a');
         parent.postMessage({
             L: fetched_data_left,
             R: fetched_data_right
