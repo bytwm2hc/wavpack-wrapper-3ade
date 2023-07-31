@@ -274,15 +274,15 @@
         //}
         // the actual player
         //try {
-        postMessage({
+        parent.postMessage({
             L: fetched_data_left,
             R: fetched_data_right
         }, '*', [fetched_data_left.buffer, fetched_data_right.buffer]);
         //} catch (e) {
-        //    postMessage({
+        //    parent.postMessage({
         //        L: fetched_data_left.slice(),
         //        R: fetched_data_right.slice()
-        //    });
+        //    }, '*');
         //}
         // clear the buffered data
         fetched_data_left = new Float32Array(0);
