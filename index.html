@@ -16,6 +16,11 @@
     let is_reading = false;
     let pcm_buffer_in_use = false;
 
+    const iOS = () => {
+        'use strict';
+        return ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+    };
+
     const concatFloat32Arrays = (arr1, arr2) => {
         'use strict';
         if (!arr1 || !arr1.length) {
@@ -64,6 +69,10 @@
         //}, [wvData]);
         wvData = undefined;
         data = undefined;
+
+        if (!iOS) {
+            fetching_interval = 1;
+        }
 
         if (typeof arrayPointer === 'undefined') {
             arrayPointer = Module._malloc(4096 * bytes_per_element);
