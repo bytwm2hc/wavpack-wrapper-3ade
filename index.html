@@ -1,7 +1,7 @@
 <script src="wavpack.js"></script>
 <script>
     'use strict';
-    let fetching_interval = 6; // ms (Immediately if available, default: 5)
+    let fetching_interval = 4; // ms (Immediately if available, default: 5)
     let min_sample_duration = 3; // sec
     let sample_rate = 44100;
     let numChannels = 1;
@@ -169,7 +169,7 @@
             // lets load more data (decode more audio from the WavPack file)
             if (sample_rate <= 64000) {
                 // Standard to medium high samplerate
-                if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
+                /* if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
                     setTimeout(periodicFetch, fetching_interval * 4);
                 } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
                     setTimeout(periodicFetch, fetching_interval * 6);
@@ -187,9 +187,9 @@
                     setTimeout(periodicFetch, fetching_interval * 18);
                 } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && decodedamount != 0) {
                     setTimeout(periodicFetch, fetching_interval * 20);
-                } else {
+                } else { */
                     setTimeout(periodicFetch, fetching_interval);
-                }
+                //}
             } else {
                 // high samplerate
                 //if (fetched_data_left.length > min_sample_duration * sample_rate) {
