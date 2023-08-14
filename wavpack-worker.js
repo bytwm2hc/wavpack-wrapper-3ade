@@ -1,23 +1,55 @@
-"use strict";
-importScripts("wavpack.js");
-const min_sample_duration = 3; // sec
-const fetching_interval = 5; // ms (Immediately if available, default: 5)
-var sample_rate = 44100;
-var numChannels = 1;
-var bps = 2;
-var decodedamount = 1;
-var arrayPointer;
-var min_sample_size = 100;
-var floatDivisor = 1.0;
-var fetched_data_left = new Float32Array(0);
-var fetched_data_right = new Float32Array(0);
-var end_of_song_reached = false;
-var stopped = false;
-var is_reading = false;
-var pcm_buffer_in_use = false;
+'use strict';
+importScripts('wavpack.js');
+let fetching_interval = 7; // ms (Immediately if available, default: 5)
+let min_sample_duration = 2; // sec
+let sample_rate = 44100;
+let numChannels = 1;
+let decodedamount = 1;
+let arrayPointer;
+let floatDivisor = 1.0;
+let fetched_data_left = new Float32Array(0);
+let fetched_data_right = new Float32Array(0);
+let min_sample_size = 100;
+let end_of_song_reached = false;
+let stopped = false;
+let is_reading = false;
+let pcm_buffer_in_use = false;
+
+const concatFloat32Arrays = (arr1, arr2) => {
+    'use strict';
+    if (!arr1 || !arr1.length) {
+        return arr2 && arr2.slice();
+    }
+    if (!arr2 || !arr2.length) {
+        return arr1 && arr1.slice();
+    }
+    let out = new Float32Array(arr1.length + arr2.length);
+    out.set(arr1);
+    out.set(arr2, arr1.length);
+    arr1 = new Float32Array(0);
+    arr2 = new Float32Array(0);
+    return out;
+}
+
+/* const makeId = (length) => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+} */
+
+/* const iOS = () => {
+    'use strict';
+    return ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+}; */
 
 const play = (wvData) => {
-    "use strict";
+    'use strict';
     end_of_song_reached = false;
     stopped = false;
     is_reading = false;
@@ -26,17 +58,18 @@ const play = (wvData) => {
     const bytes_per_element = Module.HEAP32.BYTES_PER_ELEMENT;
     let data, filename, stream;
     data = new Uint8Array(wvData);
-    filename = makeId(5);
-    stream = FS.open(filename, "w+");
+    //filename = makeId(5);
+    filename = 'wavpack.wv';
+    stream = FS.open(filename, 'w+');
     FS.write(stream, data, 0, data.length, 0);
     FS.close(stream);
-    //postMessage({
-    //    wvData: wvData
-    //}, [wvData]);
+    postMessage({
+        wvData: wvData
+    }, [wvData]);
     wvData = undefined;
     data = undefined;
 
-    if (typeof arrayPointer === "undefined") {
+    if (typeof arrayPointer === 'undefined') {
         arrayPointer = Module._malloc(4096 * bytes_per_element);
     }
 
@@ -44,41 +77,35 @@ const play = (wvData) => {
     Module.HEAP32.set(musicdata, arrayPointer / bytes_per_element);
 
     // lets initialise the WavPack file so we know its sample rate, number of channels, bytes per sample etc.
-    Module.ccall("initialiseWavPack", null, ["string"], [filename]);
+    Module.ccall('initialiseWavPack', null, ['string'], [filename]);
 
-    sample_rate = Module.ccall("GetSampleRate", null, [], []);
-    //console.log("Sample rate is ", sample_rate);
+    sample_rate = Module.ccall('GetSampleRate', null, [], []);
     postMessage({
         sampleRate: sample_rate
     });
 
     postMessage({
-        numSamples: Module.ccall("GetNumSamples", null, [], [])
+        numSamples: Module.ccall('GetNumSamples', null, [], [])
     });
 
-    numChannels = Module.ccall("GetNumChannels", null, [], []);
-    //console.log("(Reduced) number of channels is ", numChannels);
+    numChannels = Module.ccall('GetNumChannels', null, [], []);
 
-    min_sample_size = min_sample_duration * sample_rate;
-
-    bps = Module.ccall("GetBytesPerSample", null, [], []);
-    //console.log("Bytes per sample is ", bps);
-
+    let bps = Module.ccall('GetBytesPerSample', null, [], []);
     floatDivisor = Math.pow(2, bps * 8 - 1);
 
+    min_sample_size = min_sample_duration * sample_rate;
     setTimeout(periodicFetch, 0);
-};
+}
 
 const periodicFetch = () => {
-    "use strict";
-    if (pcm_buffer_in_use) {
+    'use strict';
+    decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
+
+    while (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
-        //console.log("~");
-        setTimeout(periodicFetch, fetching_interval * 3);
-        return;
+        console.log('~');
     }
 
-    decodedamount = Module.ccall("DecodeWavPackBlock", "number", ["number", "number", "number"], [2, 2, arrayPointer]);
     pcm_buffer_in_use = true;
 
     if (decodedamount != 0) {
@@ -102,10 +129,12 @@ const periodicFetch = () => {
             }
         }
 
-        fetched_data_left = concatFloat32Arrays(fetched_data_left, floatsLeft);
-        if (numChannels == 2) {
-            fetched_data_right = concatFloat32Arrays(fetched_data_right, floatsRight);
-        }
+        try {
+            fetched_data_left = concatFloat32Arrays(fetched_data_left, floatsLeft);
+            if (numChannels == 2) {
+                fetched_data_right = concatFloat32Arrays(fetched_data_right, floatsRight);
+            }
+        } catch (ignored) {}
     } else {
         // we decoded zero bytes, so end of song reached
         // we fill our decoded music buffer (PCM) with zeroes (silence)
@@ -117,23 +146,75 @@ const periodicFetch = () => {
             emptyArray[i] = 0.0;
         }
 
-        fetched_data_left = concatFloat32Arrays(fetched_data_left, emptyArray);
-        if (numChannels == 2) {
-            fetched_data_right = concatFloat32Arrays(fetched_data_right, emptyArray);
-        }
+        try {
+            fetched_data_left = concatFloat32Arrays(fetched_data_left, emptyArray);
+            if (numChannels == 2) {
+                fetched_data_right = concatFloat32Arrays(fetched_data_right, emptyArray);
+            }
+        } catch (ignored) {}
     }
 
     pcm_buffer_in_use = false;
 
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
-        setTimeout(periodicFetch, fetching_interval);
-        //return;
+        if (sample_rate <= 64000) {
+            // Standard to medium high samplerate
+            if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 2);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 4);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 8);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 16);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 24 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 24);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 32 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 32);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 64 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 64);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 96 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 96);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 128 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 128);
+            } else {
+                setTimeout(periodicFetch, fetching_interval);
+            }
+        } else {
+            // high samplerate
+            //if (fetched_data_left.length > min_sample_duration * sample_rate) {
+            //    fetching_interval = 5;
+            //}
+            /* if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
+            } else { */
+                setTimeout(periodicFetch, 0);
+            //}
+        }
     }
 
     // if we are not actively reading and have fetched enough
     if (!is_reading && fetched_data_left.length >= min_sample_size) {
-        readingLoop(); // start reading
+        readingLoop(); // start reading first time
         return;
     }
 
@@ -157,26 +238,29 @@ const periodicFetch = () => {
     //    }
     //    catch (ignored) {}
     //}
-};
+}
 
 const readingLoop = () => {
-    "use strict";
+    'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
+        if (end_of_song_reached) {
+            postMessage(null);
+        }
         return;
     }
 
-    addBufferToAudioContext();
+    setTimeout(addBufferToAudioContext, 0);
 };
 
-const addBufferToAudioContext = () => {
-    "use strict";
+const addBufferToAudioContext = async () => {
+    'use strict';
     // let the world know we are actively reading
     is_reading = true;
 
     while (pcm_buffer_in_use) {
         // wait, this shouldn't be called, but if we're adding more data to the PCM buffer, don't want to overwrite it
-        //console.log("-");
+        console.log('-');
     }
 
     pcm_buffer_in_use = true;
@@ -189,17 +273,17 @@ const addBufferToAudioContext = () => {
     //    aud_buf.copyToChannel(fetched_data_right, 1);
     //}
     // the actual player
-    try {
-        postMessage({
-            L: fetched_data_left,
-            R: fetched_data_right
-        }, [fetched_data_left.buffer, fetched_data_right.buffer]);
-    } catch (e) {
-        postMessage({
-            L: fetched_data_left.slice(),
-            R: fetched_data_right.slice()
-        });
-    }
+    //try {
+    postMessage({
+        L: fetched_data_left,
+        R: fetched_data_right
+    }, [fetched_data_left.buffer, fetched_data_right.buffer]);
+    //} catch (e) {
+    //    postMessage({
+    //        L: fetched_data_left.slice(),
+    //        R: fetched_data_right.slice()
+    //    });
+    //}
     // clear the buffered data
     fetched_data_left = new Float32Array(0);
     fetched_data_right = new Float32Array(0);
@@ -218,59 +302,37 @@ const addBufferToAudioContext = () => {
     }
 };
 
-const concatFloat32Arrays = (arr1, arr2) => {
-    "use strict";
-    if (!arr1 || !arr1.length) {
-        return arr2 && arr2.slice();
-    }
-    if (!arr2 || !arr2.length) {
-        return arr1 && arr1.slice();
-    }
-    const out = new Float32Array(arr1.length + arr2.length);
-    out.set(arr1);
-    out.set(arr2, arr1.length);
-    return out;
-};
-
-const makeId = (length) => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
-}
-
-self.onmessage = function (event) {
-    "use strict";
-    if (event.data === "onended") {
+self.onmessage = function(event) {
+    'use strict';
+    if (event.data === 'onended') {
         readingLoop();
         return;
     }
 
-    if (event.data === "BYTES_PER_ELEMENT") {
+    if (event.data === 'BYTES_PER_ELEMENT') {
         try {
-            postMessage({BYTES_PER_ELEMENT: Module.HEAP32.BYTES_PER_ELEMENT});
-        }
-        catch (e) {
-            postMessage({BYTES_PER_ELEMENT: 0});
-        }
-        return;
-    }
-
-    if (event.data === "free") {
-        if (arrayPointer) {
-            Module._free(arrayPointer);
+            postMessage({
+                BYTES_PER_ELEMENT: Module.HEAP32.BYTES_PER_ELEMENT
+            });
+        } catch (e) {
+            postMessage({
+                BYTES_PER_ELEMENT: 0
+            });
         }
         return;
     }
 
-    if (arrayPointer) {
-        Module._free(arrayPointer);
-    }
-    arrayPointer = undefined;
+    //if (event.data === 'free') {
+    //    if (arrayPointer) {
+    //        Module._free(arrayPointer);
+    //    }
+    //    FS.unlink('wavpack.wv');
+    //    return;
+    //}
+
+    //if (arrayPointer) {
+    //    Module._free(arrayPointer);
+    //}
+    //arrayPointer = undefined;
     play(event.data);
 };
