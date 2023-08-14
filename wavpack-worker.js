@@ -250,7 +250,7 @@ const readingLoop = () => {
         return;
     }
 
-    setTimeout(addBufferToAudioContext, 0);
+    addBufferToAudioContext();
 };
 
 const addBufferToAudioContext = async () => {
