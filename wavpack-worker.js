@@ -250,10 +250,10 @@ const readingLoop = () => {
         return;
     }
 
-    addBufferToAudioContext();
+    setTimeout(addBufferToAudioContext, 0);
 };
 
-const addBufferToAudioContext = () => {
+const addBufferToAudioContext = async () => {
     'use strict';
     // let the world know we are actively reading
     is_reading = true;

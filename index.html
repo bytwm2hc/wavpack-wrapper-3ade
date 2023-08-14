@@ -1,7 +1,7 @@
 <script>
     'use strict';
     var worker = new Worker('wavpack-worker.js');
-    window.addEventListener('message', function (event) {
+    window.addEventListener('message', async function (event) {
     	'use strict';
     	let wvData;
     	if (event.data === 'onended') {
@@ -15,7 +15,7 @@
     		    worker.postMessage('BYTES_PER_ELEMENT');
     		}, 1);
     	}
-        worker.onmessage = function(event) {
+        worker.onmessage = async function(event) {
         	'use strict';
         	if (event.data === null) {
                 parent.postMessage(null, '*');
