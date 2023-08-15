@@ -1,0 +1,57 @@
+<script>
+    'use strict';
+    var worker = new Worker('wavpack-worker.js');
+    window.addEventListener('message', async function (event) {
+    	'use strict';
+    	let wvData;
+    	if (event.data === 'onended') {
+            worker.postMessage('onended');
+            return;
+        }
+    	if (event.data.wvData) {
+    		wvData = event.data.wvData;
+    		setTimeout(function() {
+    		    'use strict';
+    		    worker.postMessage('BYTES_PER_ELEMENT');
+    		}, 1);
+    	}
+        worker.onmessage = async function(event) {
+        	'use strict';
+        	if (event.data === null) {
+                parent.postMessage(null, '*');
+                return;
+            }
+            if (typeof event.data.L !== 'undefined') {
+                parent.postMessage({
+            	    L: event.data.L,
+                	R: event.data.R
+                }, '*', [event.data.L.buffer, event.data.R.buffer]);
+                return;
+            }
+            if (typeof event.data.BYTES_PER_ELEMENT !== 'undefined') {
+                if (event.data.BYTES_PER_ELEMENT > 0) {
+                    worker.postMessage(wvData, [wvData]);
+                    wvData = undefined;
+                } else {
+                    setTimeout(function() {
+                        'use strict';
+                        worker.postMessage('BYTES_PER_ELEMENT');
+                    }, 1);
+                }
+                return;
+            }
+            if (typeof event.data.sampleRate !== 'undefined') {
+                parent.postMessage({sampleRate: event.data.sampleRate}, '*');
+                return;
+            }
+            if (typeof event.data.numSamples !== 'undefined') {
+                parent.postMessage({numSamples: event.data.numSamples}, '*');
+                return;
+            }
+            if (typeof event.data.wvData !== 'undefined') {
+                event.data.wvData = undefined;
+                return;
+            }
+        };
+    });
+</script>
