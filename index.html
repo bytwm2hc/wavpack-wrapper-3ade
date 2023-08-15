@@ -98,7 +98,7 @@ const play = (wvData) => {
     setTimeout(periodicFetch, 0);
 }
 
-const periodicFetch = () => {
+const periodicFetch = async () => {
     'use strict';
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
