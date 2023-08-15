@@ -98,14 +98,15 @@ const play = (wvData) => {
     setTimeout(periodicFetch, 0);
 }
 
-const periodicFetch = async () => {
+const periodicFetch = () => {
     'use strict';
-    decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
-
-    while (pcm_buffer_in_use) {
+    if (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
-        console.log('~');
+        //console.log("~");
+        setTimeout(periodicFetch, fetching_interval * 3);
+        return;
     }
+    decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
     pcm_buffer_in_use = true;
 
@@ -254,14 +255,16 @@ const readingLoop = () => {
     addBufferToAudioContext();
 };
 
-const addBufferToAudioContext = async () => {
+const addBufferToAudioContext = () => {
     'use strict';
     // let the world know we are actively reading
     is_reading = true;
 
-    while (pcm_buffer_in_use) {
+    if (pcm_buffer_in_use) {
         // wait, this shouldn't be called, but if we're adding more data to the PCM buffer, don't want to overwrite it
-        console.log('-');
+        //console.log("-");
+        setTimeout(addBufferToAudioContext, fetching_interval * 3);
+        return;
     }
 
     pcm_buffer_in_use = true;
