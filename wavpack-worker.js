@@ -164,7 +164,6 @@ const periodicFetch = () => {
                 fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 2);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 3 && decodedamount != 0) {
-                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 5 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 6);
@@ -191,10 +190,8 @@ const periodicFetch = () => {
                 fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 2);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
-                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 3);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
-                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 8);
