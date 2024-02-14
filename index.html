@@ -14,7 +14,6 @@
     		    'use strict';
     		    worker.postMessage('BYTES_PER_ELEMENT');
     		}, 1);
-    		console.log("0");
     	}
         worker.onmessage = async function(event) {
         	'use strict';
@@ -33,12 +32,10 @@
                 if (event.data.BYTES_PER_ELEMENT > 0) {
                     worker.postMessage(wvData, [wvData]);
                     wvData = undefined;
-                    console.log("1");
                 } else {
                     setTimeout(function() {
                         'use strict';
                         worker.postMessage('BYTES_PER_ELEMENT');
-                        console.log("2");
                     }, 1);
                 }
                 return;
