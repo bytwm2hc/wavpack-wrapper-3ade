@@ -4,7 +4,7 @@ let fetching_interval = 1; // ms (Immediately if available, default: 5)
 let min_sample_duration = 2; // sec
 let sample_rate = 44100;
 let numChannels = 1;
-let decodedamount;
+let decodedamount = 0;
 let arrayPointer;
 let floatDivisor = 1.0;
 let fetched_data_left = new Float32Array(0);
