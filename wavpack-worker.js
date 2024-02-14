@@ -162,16 +162,11 @@ const periodicFetch = () => {
         if (sample_rate <= 64000) {
             // Standard to medium samplerate
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
-                if (delay) {
-                    fetching_interval = ++fetching_interval;
-                    setTimeout(periodicFetch, fetching_interval * 2);
-                } else {
-                    setTimeout(periodicFetch, fetching_interval);
-                }
+                setTimeout(periodicFetch, fetching_interval * 2);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 3 && decodedamount != 0) {
-                delay = false;
                 setTimeout(periodicFetch, fetching_interval * 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 5 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 6);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 12);
