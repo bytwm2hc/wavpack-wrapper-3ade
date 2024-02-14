@@ -159,7 +159,7 @@ const periodicFetch = () => {
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
         if (sample_rate <= 64000) {
-            // Standard to medium high samplerate
+            // Standard to medium samplerate
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
                 fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 2);
@@ -186,27 +186,34 @@ const periodicFetch = () => {
                 setTimeout(periodicFetch, fetching_interval);
             }
         } else {
-            // high samplerate
+            // High samplerate
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2);
+                fetching_interval = ++fetching_interval;
+                setTimeout(periodicFetch, fetching_interval * 2);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4);
+                fetching_interval = ++fetching_interval;
+                setTimeout(periodicFetch, fetching_interval * 3);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6);
+                fetching_interval = ++fetching_interval;
+                setTimeout(periodicFetch, fetching_interval * 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8);
+                setTimeout(periodicFetch, fetching_interval * 8);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10);
+                setTimeout(periodicFetch, fetching_interval * 10);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 14 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14);
+                setTimeout(periodicFetch, fetching_interval * 14);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 18 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18);
+                setTimeout(periodicFetch, fetching_interval * 18);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval + 2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20);
+                setTimeout(periodicFetch, fetching_interval * 24);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 30 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 32);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 60 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 72);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 90 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 112);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 120 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 160);
             } else {
                 setTimeout(periodicFetch, fetching_interval);
             }
