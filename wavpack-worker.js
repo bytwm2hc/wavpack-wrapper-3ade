@@ -1,10 +1,10 @@
 'use strict';
 importScripts('wavpack.js');
-let fetching_interval = 7; // ms (Immediately if available, default: 5)
+let fetching_interval = 1; // ms (Immediately if available, default: 5)
 let min_sample_duration = 2; // sec
 let sample_rate = 44100;
 let numChannels = 1;
-let decodedamount = 1;
+let decodedamount;
 let arrayPointer;
 let floatDivisor = 1.0;
 let fetched_data_left = new Float32Array(0);
@@ -161,22 +161,26 @@ const periodicFetch = () => {
         if (sample_rate <= 64000) {
             // Standard to medium high samplerate
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 2);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 4 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 3 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 4);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval * 8);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 5 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 6);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 12);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 15 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 16);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 24 && decodedamount != 0) {
-                setTimeout(periodicFetch, fetching_interval * 24);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 32 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
+                setTimeout(periodicFetch, fetching_interval * 22);
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 30 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 32);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 64 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 60 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 64);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 96 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 90 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 96);
-            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 128 && decodedamount != 0) {
+            } else if (fetched_data_left.length > min_sample_duration * sample_rate * 120 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 128);
             } else {
                 setTimeout(periodicFetch, fetching_interval);
