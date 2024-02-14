@@ -197,12 +197,11 @@ const periodicFetch = () => {
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
-                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 8);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 10);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
-                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 14);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 18);
