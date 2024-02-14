@@ -168,14 +168,17 @@ const periodicFetch = () => {
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 5 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 6);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 12);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 15 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 16);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 22);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 30 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 32);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 60 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 64);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 90 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 96);
@@ -194,16 +197,19 @@ const periodicFetch = () => {
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 6 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 4);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 8 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 8);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 10 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 10);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 12 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 14);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 16 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 18);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 20 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 24);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 30 && decodedamount != 0) {
+                fetching_interval = ++fetching_interval;
                 setTimeout(periodicFetch, fetching_interval * 32);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 60 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 72);
