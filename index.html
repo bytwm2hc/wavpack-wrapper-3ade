@@ -33,10 +33,12 @@
                 if (event.data.BYTES_PER_ELEMENT > 0) {
                     worker.postMessage(wvData, [wvData]);
                     wvData = undefined;
+                    console.log("1");
                 } else {
                     setTimeout(function() {
                         'use strict';
                         worker.postMessage('BYTES_PER_ELEMENT');
+                        console.log("2");
                     }, 1);
                 }
                 return;
