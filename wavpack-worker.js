@@ -1,7 +1,7 @@
 'use strict';
 importScripts('wavpack.js');
 let filename = 'wavpack.wv';
-let fetching_interval = 8; // ms (Immediately if available, default: 5)
+let fetching_interval; // ms (default: 5)
 let min_sample_duration = 2; // sec
 let sample_rate = 44100;
 let numChannels = 1;
@@ -79,6 +79,12 @@ const play = (wvData) => {
     Module.ccall('initialiseWavPack', null, ['string'], [filename]);
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
+    if (sample_rate > 64000) {
+        fetching_interval = 16;
+    }
+    else {
+        fetching_interval = 8;
+    }
     postMessage({
         sampleRate: sample_rate
     });
@@ -162,7 +168,6 @@ const periodicFetch = () => {
         // lets load more data (decode more audio from the WavPack file)
         if (sample_rate <= 64000) {
             // Standard to medium samplerate
-            fetching_interval *= 2;
             if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
                 setTimeout(periodicFetch, fetching_interval * 2);
             } else if (fetched_data_left.length > min_sample_duration * sample_rate * 3 && decodedamount != 0) {
