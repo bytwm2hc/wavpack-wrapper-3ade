@@ -1,5 +1,6 @@
 'use strict';
 importScripts('wavpack.js');
+let filename = 'wavpack.wv';
 let fetching_interval = 1; // ms (Immediately if available, default: 5)
 let min_sample_duration = 2; // sec
 let sample_rate = 44100;
@@ -56,10 +57,8 @@ const play = (wvData) => {
     fetched_data_left = new Float32Array(0);
     fetched_data_right = new Float32Array(0);
     const bytes_per_element = Module.HEAP32.BYTES_PER_ELEMENT;
-    let data, filename, stream;
+    let data, stream;
     data = new Uint8Array(wvData);
-    //filename = makeId(5);
-    filename = 'wavpack.wv';
     stream = FS.open(filename, 'w+');
     FS.write(stream, data, 0, data.length, 0);
     FS.close(stream);
@@ -152,6 +151,8 @@ const periodicFetch = () => {
                 fetched_data_right = concatFloat32Arrays(fetched_data_right, emptyArray);
             }
         } catch (ignored) {}
+        
+        Module.ccall('finaliseWavPack', null, ['string'], [filename]);
     }
 
     pcm_buffer_in_use = false;
