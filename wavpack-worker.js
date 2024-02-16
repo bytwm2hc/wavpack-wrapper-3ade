@@ -159,7 +159,7 @@ const periodicFetch = () => {
         } catch (ignored) {}
         
         Module.ccall('finaliseWavPack', null, ['string'], [filename]);
-        Module._free(arrayPointer);
+        Module._free(Module.HEAP32.buffer);
     }
 
     pcm_buffer_in_use = false;
