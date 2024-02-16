@@ -80,7 +80,7 @@ const play = (wvData) => {
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
     if (sample_rate <= 64000) {
-        fetching_interval = 65;
+        fetching_interval = 24;
     }
     else {
         fetching_interval = 8;
@@ -169,7 +169,7 @@ const periodicFetch = () => {
         if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
             fetching_interval += 2;
         }
-        setTimeout(periodicFetch);
+        setTimeout(periodicFetch, fetching_interval);
     }
 
     // if we are not actively reading and have fetched enough
