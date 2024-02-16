@@ -80,7 +80,7 @@ const play = (wvData) => {
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
     if (sample_rate <= 64000) {
-        fetching_interval = 20;
+        fetching_interval = 19;
     }
     else {
         fetching_interval = 8;
@@ -166,7 +166,7 @@ const periodicFetch = () => {
 
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
-        if (fetched_data_left.length > min_sample_duration * sample_rate * 2 && decodedamount != 0) {
+        if (fetched_data_left.length > min_sample_duration * sample_rate * 2.5 && decodedamount != 0) {
             fetching_interval += 1;
         }
         setTimeout(periodicFetch, fetching_interval);
