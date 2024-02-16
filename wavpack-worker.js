@@ -168,8 +168,11 @@ const periodicFetch = () => {
         // lets load more data (decode more audio from the WavPack file)
         if (fetched_data_left.length > min_sample_duration * sample_rate * 2.5 && decodedamount != 0) {
             fetching_interval += 1;
+            setTimeout(periodicFetch, fetching_interval + 2);
         }
-        setTimeout(periodicFetch, fetching_interval);
+        else {
+            setTimeout(periodicFetch, fetching_interval);
+        }
     }
 
     // if we are not actively reading and have fetched enough
