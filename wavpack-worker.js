@@ -79,7 +79,7 @@ const play = (wvData) => {
     Module.ccall('initialiseWavPack', null, ['string'], [filename]);
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
-    if (sample_rate > 64000) {
+    if (sample_rate <= 64000) {
         fetching_interval = 16;
     }
     else {
@@ -262,6 +262,9 @@ const readingLoop = () => {
     'use strict';
     if (stopped || fetched_data_left.length < min_sample_size) {
         is_reading = false;
+        if (fetching_interval > 2) {
+            fetching_interval -= 1;
+        }
         if (end_of_song_reached) {
             postMessage(null);
         }
