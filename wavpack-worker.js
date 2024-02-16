@@ -80,7 +80,7 @@ const play = (wvData) => {
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
     if (sample_rate <= 64000) {
-        fetching_interval = 24;
+        fetching_interval = 21;
     }
     else {
         fetching_interval = 8;
