@@ -217,6 +217,12 @@ const readingLoop = () => {
     }
 
     addBufferToAudioContext();
+    if (sample_rate <= 64000) {
+        fetching_interval = 19;
+    }
+    else {
+        fetching_interval = 8;
+    }
 };
 
 const addBufferToAudioContext = async () => {
