@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 importScripts('wavpack.js');
 let filename = 'wavpack.wv';
 let fetching_interval; // ms (original: 5, defined below)
@@ -106,9 +106,15 @@ const periodicFetch = () => {
     'use strict';
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
+    if (fetched_data_left.length >= min_sample_duration * sample_rate * 10 && fetched_data_left.length % sample_rate == 0 && decodedamount != 0) {
+        fetching_interval += 1;
+        setTimeout(periodicFetch, fetching_interval);
+        return;
+    }
+
     while (pcm_buffer_in_use) {
         // wait - this shouldn't be called but have as a sanity check, if we are currently adding PCM (decoded) music data to the AudioBuffer context we don't want to overwrite it
-        console.log('~');
+        //console.log('~');
     }
 
     pcm_buffer_in_use = true;
@@ -166,13 +172,7 @@ const periodicFetch = () => {
 
     if (!stopped && !end_of_song_reached) {
         // lets load more data (decode more audio from the WavPack file)
-        if (fetched_data_left.length > min_sample_duration * sample_rate * 3 && fetched_data_left.length < min_sample_duration * sample_rate * 4 && decodedamount != 0) {
-            fetching_interval += 1;
-            setTimeout(periodicFetch, fetching_interval);
-        }
-        else {
-            setTimeout(periodicFetch, fetching_interval);
-        }
+        setTimeout(periodicFetch, fetching_interval);
     }
 
     // if we are not actively reading and have fetched enough
@@ -216,13 +216,14 @@ const readingLoop = () => {
         return;
     }
 
-    addBufferToAudioContext();
     if (sample_rate <= 64000) {
         fetching_interval = 16;
     }
     else {
         fetching_interval = 8;
     }
+
+    addBufferToAudioContext();
 };
 
 const addBufferToAudioContext = async () => {
@@ -232,7 +233,7 @@ const addBufferToAudioContext = async () => {
 
     while (pcm_buffer_in_use) {
         // wait, this shouldn't be called, but if we're adding more data to the PCM buffer, don't want to overwrite it
-        console.log('-');
+        //console.log('-');
     }
 
     pcm_buffer_in_use = true;
