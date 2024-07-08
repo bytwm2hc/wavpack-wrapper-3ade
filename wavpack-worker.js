@@ -3,13 +3,13 @@ importScripts('wavpack.js');
 let filename = 'wavpack.wv';
 let fetching_interval; // ms (original: 5, defined below)
 let min_sample_duration = 2; // sec
-let sample_rate = 44100;
-let numChannels = 1;
+let sample_rate;
+let numChannels;
 let decodedamount;
 let arrayPointer;
 let floatDivisor = 1.0;
-let fetched_data_left = new Float32Array(0);
-let fetched_data_right = new Float32Array(0);
+let fetched_data_left;
+let fetched_data_right;
 let min_sample_size = 100;
 let end_of_song_reached = false;
 let stopped = false;
@@ -80,20 +80,19 @@ const play = (wvData) => {
 
     sample_rate = Module.ccall('GetSampleRate', null, [], []);
     if (sample_rate <= 64000) {
-        fetching_interval = 16;
+        fetching_interval = 14;
     }
     else {
-        fetching_interval = 8;
+        fetching_interval = 7;
     }
     postMessage({
         sampleRate: sample_rate
     });
 
+    numChannels = Module.ccall('GetNumChannels', null, [], []);
     postMessage({
         numSamples: Module.ccall('GetNumSamples', null, [], [])
     });
-
-    numChannels = Module.ccall('GetNumChannels', null, [], []);
 
     let bps = Module.ccall('GetBytesPerSample', null, [], []);
     floatDivisor = Math.pow(2, bps * 8 - 1);
@@ -102,14 +101,16 @@ const play = (wvData) => {
     setTimeout(periodicFetch, 0);
 }
 
-const periodicFetch = () => {
+const periodicFetch = async () => {
     'use strict';
     decodedamount = Module.ccall('DecodeWavPackBlock', 'number', ['number', 'number', 'number'], [2, 2, arrayPointer]);
 
-    if (fetched_data_left.length >= min_sample_duration * sample_rate * 10 && fetched_data_left.length % sample_rate == 0 && decodedamount != 0) {
+    if (fetched_data_left.length >= min_sample_duration * sample_rate * 10 && decodedamount != 0) {
         fetching_interval += 1;
-        setTimeout(periodicFetch, fetching_interval);
-        return;
+        if (fetched_data_left.length % sample_rate === 0) {
+            setTimeout(periodicFetch, fetching_interval);
+            return;
+        }
     }
 
     while (pcm_buffer_in_use) {
@@ -166,6 +167,8 @@ const periodicFetch = () => {
         
         Module.ccall('finaliseWavPack', null, ['string'], [filename]);
         Module._free(Module.HEAP32.buffer);
+        Module._free(arrayPointer);
+        arrayPointer = undefined;
     }
 
     pcm_buffer_in_use = false;
@@ -205,22 +208,26 @@ const periodicFetch = () => {
 
 const readingLoop = () => {
     'use strict';
-    if (stopped || fetched_data_left.length < min_sample_size) {
+    if (stopped) {
         is_reading = false;
-        if (fetching_interval > 1) {
-            fetching_interval -= 1;
-        }
         if (end_of_song_reached) {
             postMessage(null);
         }
         return;
     }
 
+    if (fetched_data_left.length < min_sample_size) {
+        if (fetching_interval > 1) {
+            fetching_interval -= 1;
+        }
+        return;
+    }
+
     if (sample_rate <= 64000) {
-        fetching_interval = 16;
+        fetching_interval = 14;
     }
     else {
-        fetching_interval = 8;
+        fetching_interval = 7;
     }
 
     addBufferToAudioContext();
@@ -295,17 +302,13 @@ self.onmessage = function(event) {
         return;
     }
 
-    //if (event.data === 'free') {
-    //    if (arrayPointer) {
-    //        Module._free(arrayPointer);
-    //    }
-    //    FS.unlink('wavpack.wv');
-    //    return;
-    //}
+    /* if (event.data === 'free') {
+        Module.ccall('finaliseWavPack', null, ['string'], [filename]);
+        Module._free(Module.HEAP32.buffer);
+        Module._free(arrayPointer);
+        arrayPointer = undefined;
+        return;
+    } */
 
-    //if (arrayPointer) {
-    //    Module._free(arrayPointer);
-    //}
-    //arrayPointer = undefined;
     play(event.data);
 };
